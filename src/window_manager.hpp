@@ -9,7 +9,8 @@ using namespace cv;
 
 const string INPUT = "Input";
 const string GROUND_TRUTH = "Ground truth";
-const string LIB_MOG_1 = "Library MOG v1";
+const string OPENCV_MOG_2 = "OpenCV MoG v2";
+const string MY_MOG = "My MoG";
 
 const int WINDOW_PADDING = 30;
 const int WINDOW_X_POS_OFFSET = 350;
