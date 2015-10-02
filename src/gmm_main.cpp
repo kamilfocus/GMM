@@ -44,7 +44,7 @@ int main(int argc, char** argv)
 {
     //Mat test_frame = imread("highway/input/in000001.jpg", 1);
     //print_image(test_frame);
-    MixtureOfGaussians MoG(10, 10, 3, 0.1);
+    MixtureOfGaussians MoG(3, 0.1);
     /*FileNameGenerator input_file_name_generator("highway/input/in", JPG);
     FileNameGenerator ground_truth_file_name_generator("highway/groundtruth/gt", PNG);
 

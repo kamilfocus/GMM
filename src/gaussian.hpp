@@ -5,14 +5,15 @@ class Gaussian
 {
     private:
         double alpha;
-        double weigth;
+        double weight;
         double r_mean;
         double g_mean;
         double b_mean;
-        double standard_deviation; //same for all RGB values
+        double standard_deviation; //same for all RGB values, sigma without square
         bool foreground;
     public:
-        void init(double alpha);
+        void init(double alpha, uchar *gaussian_mean);
+        void frame_init(double weight, double *gaussian_mean, double standard_deviation);
         bool update();
 };
 

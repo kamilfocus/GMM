@@ -26,13 +26,26 @@ class MixtureOfGaussians
     public:
         /* @brief Constructor for Mixture of Gaussians algorithm
          *
-         * @param[in]   clusters_num    number of clusters in K-means algorithm
-         *                              (used to initialize Gaussians parameters)
          * @param[in]   k               number of Gaussians for each pixel
          * @param[in]   alpha           learning rate for each Gaussian
         */
-        MixtureOfGaussians(int clusters_num, int k, double alpha);
+        MixtureOfGaussians(int k, double alpha);
+
         Mat update(const Mat & input_frame);
+
+        //Initalization
+
+        /* @brief Generates clusters_num of RGB means (3-D vectors)
+         *
+         * @param[in]   deterministic   initialization mode
+        */
+        uchar ** generate_inital_means(bool deterministic);
+
+        /* @brief Executes k-mean algorithm for Gaussian parameters initialization
+         *
+         * @param[in]   input_frame     the first frame of the movie
+        */
+        void initialize_gaussians(const Mat & input_frame);
 };
 
 #endif /* SRC_MIXTURE_OF_GAUSSIANS_HPP_ */

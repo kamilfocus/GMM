@@ -9,7 +9,8 @@ class Pixel
         int k;
         Gaussian *gaussian_ptr;
     public:
-        void init(int k, double alpha);
+        void init(int k, double alpha, uchar **gaussian_means);
+        void frame_init(double *weight, double **gaussian_means, double *standard_devation);
         bool is_foreground(int red, int green, int blue);
 };
 

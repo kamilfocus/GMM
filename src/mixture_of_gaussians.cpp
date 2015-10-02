@@ -1,12 +1,16 @@
 #include "mixture_of_gaussians.hpp"
 #include <iostream>
 
-MixtureOfGaussians::MixtureOfGaussians(int clusters_num, int k, double alpha)
+MixtureOfGaussians::MixtureOfGaussians(int k, double alpha)
 {
     this->width = NONE;
     this->height = NONE;
-    this->clusters_num = clusters_num;
+    this->clusters_num = k;
     is_initialized = false;
+
+    uchar ** gaussian_means;
+    gaussian_means = generate_inital_means(true);
+
     pixels = new Pixel*[height];
     for(int i=0; i < height; ++i)
     {
@@ -16,7 +20,7 @@ MixtureOfGaussians::MixtureOfGaussians(int clusters_num, int k, double alpha)
     for(int i=0; i < height; ++i)
     {
         for(int j=0; j < width; ++j)
-            pixels[i][j].init(k, alpha);
+            pixels[i][j].init(k, alpha, gaussian_means);
     }
 }
 
@@ -27,6 +31,7 @@ Mat MixtureOfGaussians::update(const Mat & input_frame)
     {
         height = input_frame.rows;
         width = input_frame.cols;
+        initialize_gaussians(input_frame);
         is_initialized = true;
     }
     for(int row = 0; row < height; ++row)
