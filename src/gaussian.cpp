@@ -9,7 +9,7 @@ void Gaussian::init(double alpha, uchar *gaussian_mean)
     this->g_mean = gaussian_mean[1];
     this->b_mean = gaussian_mean[2];
     this->weight = 0.0;
-    this->standard_deviation = 0.0
+    this->standard_deviation = 0.0;
     //std::cout<<alpha<<std::endl;
 }
 

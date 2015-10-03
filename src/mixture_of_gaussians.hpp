@@ -20,6 +20,7 @@ class MixtureOfGaussians
         int height, width;
         int clusters_num;
         bool is_initialized;
+        double alpha;
 
         void paint_foreground(const uchar ** const input_pixel_ptr,
                               uchar ** const result_pixel_ptr,
@@ -31,6 +32,7 @@ class MixtureOfGaussians
          * @param[in]   alpha           learning rate for each Gaussian
         */
         MixtureOfGaussians(int k, double alpha);
+        //~MixtureOfGaussians();
 
         Mat update(const Mat & input_frame);
 
