@@ -5,6 +5,7 @@
 using namespace cv;
 
 #include "pixel.hpp"
+#include "tools.hpp"
 
 const uchar BLACK = (uchar) 0;
 const uchar WHITE = (uchar) 255;
@@ -44,8 +45,9 @@ class MixtureOfGaussians
         /* @brief Executes k-mean algorithm for Gaussian parameters initialization
          *
          * @param[in]   input_frame     the first frame of the movie
+         * @param[out]  result_frame    Returned frame is always black
         */
-        void initialize_gaussians(const Mat & input_frame);
+        void initialize_gaussians(const Mat & input_frame, Mat & result_frame);
 };
 
 #endif /* SRC_MIXTURE_OF_GAUSSIANS_HPP_ */

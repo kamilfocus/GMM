@@ -1,6 +1,9 @@
 #ifndef SRC_GAUSSIAN_HPP_
 #define SRC_GAUSSIAN_HPP_
 
+#include <opencv2/core/core.hpp>
+using namespace cv;
+
 class Gaussian
 {
     private:
@@ -14,6 +17,8 @@ class Gaussian
     public:
         void init(double alpha, uchar *gaussian_mean);
         void frame_init(double weight, double *gaussian_mean, double standard_deviation);
+        void get_rgb_mean(double * gaussian_means);
+        void print();
         bool update();
 };
 
