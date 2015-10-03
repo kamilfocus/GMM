@@ -1,6 +1,8 @@
 #include "mixture_of_gaussians.hpp"
 #include "tools.hpp"
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 
 MixtureOfGaussians::MixtureOfGaussians(int k, double alpha)
 {
@@ -226,7 +228,8 @@ void MixtureOfGaussians::initialize_gaussians(const Mat & input_frame, Mat & res
     //Count final standard deviation
     for(int i = 0; i < clusters_num; ++i)
     {
-        standard_deviation[i] *= ((double) cluster_elements[i])/RGB_COMPONENTS_NUM;
+        standard_deviation[i] /= (double) cluster_elements[i];
+        standard_deviation[i] /= (double) RGB_COMPONENTS_NUM;
         standard_deviation[i] = sqrt(standard_deviation[i]);
         cout << "standard deviation " << i << ": " << standard_deviation[i] << " ";
     }
