@@ -78,8 +78,8 @@ void Pixel::sort(double bg_classifier)
     bool isForeground = false;
     for(int i=0; i<k; i++)
     {
-    	sum += gaussian_ptr[i].getWeight();
-    	gaussian_ptr[i].setIsForeground(isForeground);
+    	sum += gaussian_ptr[i].get_weight();
+    	gaussian_ptr[i].set_isForeground(isForeground);
     	if(sum > bg_classifier)
     		isForeground = true;
     }
@@ -108,11 +108,34 @@ bool Pixel::is_foreground(double * rgb)
             }
             gaussian_ptr[i].update_unmatched();
         }
-        return true;
+        std::sort(gaussian_ptr, gaussian_ptr+k);
+        return gaussian_ptr[match_index].isForeground();
     }
     else//@TODO Case 2: No match is found
     {
+    	/*
+    	int new_gaussian_index = 0;
+    	double new_weight = 0;
+    	for(int i=0; i<k; i++)
+    	{
+    		if(new_weight==0 || new_weight>gaussian_ptr[i].get_weight())
+    		{
+    			new_gaussian_index = i;
+    			new_weight = gaussian_ptr[i].get_weight();
+    		}
+    	}
+    	double * new_means = rgb;
+    	double new_deviation = sqrt(Gaussian::get_initial_variance());
+        gaussian_ptr[new_gaussian_index].frame_init(new_weight, new_means, new_deviation);
+        std::sort(gaussian_ptr, gaussian_ptr+k);
+        */
 
-        return false;
+    	double * new_means = rgb;
+    	double new_deviation = max(sqrt(Gaussian::get_initial_variance()), gaussian_ptr[k-1].get_deviation());
+    	double new_weight = gaussian_ptr[k-1].get_weight();
+
+    	gaussian_ptr[k-1].frame_init(new_weight, new_means, new_deviation);
+
+        return true;
     }
 }

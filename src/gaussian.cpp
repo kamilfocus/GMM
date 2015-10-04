@@ -3,6 +3,8 @@
 #include <iostream>
 using namespace std;
 
+double Gaussian::initial_variance = 0;
+
 void Gaussian::init(double alpha, uchar *gaussian_mean)
 {
     this->alpha = alpha;
@@ -110,7 +112,7 @@ Gaussian & Gaussian::operator=(const Gaussian & gaussian)
     //g_mean = gaussian.g_mean;
     //b_mean = gaussian.b_mean;
     standard_deviation = gaussian.standard_deviation; //same for all RGB values, sigma without square
-    isForeground = gaussian.isForeground;
+    foreground = gaussian.foreground;
 
 	return (*this);
 }

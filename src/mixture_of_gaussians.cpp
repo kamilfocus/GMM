@@ -227,14 +227,22 @@ void MixtureOfGaussians::initialize_gaussians(const Mat & input_frame, Mat & res
         }
     }
 
+    double initial_variance = 0;
     //Count final standard deviation
     for(int i = 0; i < clusters_num; ++i)
     {
         standard_deviation[i] /= (double) cluster_elements[i];
         standard_deviation[i] /= (double) RGB_COMPONENTS_NUM;
+
+        if(i == 0 || initial_variance < standard_deviation[i])
+        	initial_variance = standard_deviation[i];
+
         standard_deviation[i] = sqrt(standard_deviation[i]);
         cout << "standard deviation " << i << ": " << standard_deviation[i] << " ";
     }
+
+    //Gaussian::set_initial_variance(initial_variance);
+    Gaussian::get_initial_variance() = initial_variance;
 
     cout << endl;
 
