@@ -33,7 +33,7 @@ class MixtureOfGaussians
          * @param[in]   alpha           learning rate for each Gaussian
         */
         MixtureOfGaussians(int k, double alpha, double bg_classifier);
-        //~MixtureOfGaussians();
+        ~MixtureOfGaussians();
 
         Mat update(const Mat & input_frame);
 

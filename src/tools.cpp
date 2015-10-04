@@ -10,3 +10,5 @@ double malahidan_distance(double * vector_x, double * vector_y, int size)
     }
     return sum;
 }
+
+

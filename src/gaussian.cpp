@@ -38,6 +38,11 @@ void Gaussian::print()
     cout<<standard_deviation<<")";
 }
 
+bool Gaussian :: operator<(const Gaussian& gaussian) const
+{
+    return (get_sort_parameter() > gaussian.get_sort_parameter());
+}
+
 double Gaussian::get_sort_parameter() const
 {
     return (weight/standard_deviation);
@@ -46,4 +51,16 @@ double Gaussian::get_sort_parameter() const
 bool Gaussian::update()
 {
     return true;
+}
+
+Gaussian & Gaussian::operator=(const Gaussian & gaussian)
+{
+    weight = gaussian.weight;
+    r_mean = gaussian.r_mean;
+    g_mean = gaussian.g_mean;
+    b_mean = gaussian.b_mean;
+    standard_deviation = gaussian.standard_deviation; //same for all RGB values, sigma without square
+    isForeground = gaussian.isForeground;
+
+	return (*this);
 }

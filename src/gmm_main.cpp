@@ -48,8 +48,10 @@ int main(int argc, char** argv)
     MixtureOfGaussians MoG(3, 0.1, 0.5);
     MoG.initialize_gaussians(test_frame, output_frame);
     MoG.print_parameters(100, 100);
-    MoG.sort();
-    MoG.print_parameters(100, 100);
+    print_image(output_frame);
+
+    //MoG.sort();
+    //MoG.print_parameters(100, 100);
     /*FileNameGenerator input_file_name_generator("highway/input/in", JPG);
     FileNameGenerator ground_truth_file_name_generator("highway/groundtruth/gt", PNG);
 

@@ -15,14 +15,14 @@ MixtureOfGaussians::MixtureOfGaussians(int k, double alpha, double bg_classifier
     pixels = NULL;
 }
 
-/*
+
 MixtureOfGaussians::~MixtureOfGaussians()
 {
 	for(int i=0; i < height; i++)
 		delete [] pixels[i];
 	delete [] pixels;
 
-}*/
+}
 
 uchar ** MixtureOfGaussians::generate_inital_means(bool deterministic)
 {
@@ -47,6 +47,7 @@ uchar ** MixtureOfGaussians::generate_inital_means(bool deterministic)
 
     }
 
+	/*
 	cout << "init means:" << endl;
 	for(int i=0; i<clusters_num; i++){
 		cout << "gaussian: " << i << " ";
@@ -55,7 +56,7 @@ uchar ** MixtureOfGaussians::generate_inital_means(bool deterministic)
 		}
 		cout << endl;
 	}
-
+	*/
     return new_gaussian_means;
 }
 
@@ -237,13 +238,18 @@ void MixtureOfGaussians::initialize_gaussians(const Mat & input_frame, Mat & res
 
     cout << endl;
 
+    pixels[0][0].frame_init(weight, gaussian_means, standard_deviation);
+    pixels[0][0].sort(bg_classifier);
+
     //Initialize gaussians with generated value and free memory
     for(int row = 0; row < height; ++row)
     {
         delete [] pixel_cluster_group[row];
         for(int col = 0; col < width; ++col)
         {
-            pixels[row][col].frame_init(weight, gaussian_means, standard_deviation);
+        	if(row == 0 && col == 0)
+        		continue;
+            pixels[row][col] = pixels[0][0];
         }
     }
 
@@ -257,6 +263,7 @@ void MixtureOfGaussians::initialize_gaussians(const Mat & input_frame, Mat & res
     }
     delete [] gaussian_means;
 }
+
 
 void MixtureOfGaussians::sort()
 {

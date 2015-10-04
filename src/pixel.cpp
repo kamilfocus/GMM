@@ -19,6 +19,14 @@ void Pixel::frame_init(double *weight, double **gaussian_means, double *standard
     }
 }
 
+Pixel & Pixel::operator=(const Pixel & pixel)
+{
+	for(int i=0; i<k; i++)
+		gaussian_ptr[i] = pixel.gaussian_ptr[i];
+
+	return (*this);
+}
+
 void Pixel::print(int gaussian_num)
 {
     if(gaussian_num == -1)
@@ -61,15 +69,19 @@ void Pixel::print_error(int gaussian_num)
     cout<<"No Gaussian with id: "<<gaussian_num<<endl;
 }
 
-
-bool operator<(const Gaussian& x, const Gaussian& y)
-{
-    return (x.get_sort_parameter() > y.get_sort_parameter());
-}
-
 void Pixel::sort(double bg_classifier)
 {
     std::sort(gaussian_ptr, (gaussian_ptr + k));
+
+    double sum = 0;
+    bool isForeground = false;
+    for(int i=0; i<k; i++)
+    {
+    	sum += gaussian_ptr[i].getWeight();
+    	gaussian_ptr[i].setIsForeground(isForeground);
+    	if(sum > bg_classifier)
+    		isForeground = true;
+    }
 }
 
 bool Pixel::is_foreground(int red, int green, int blue)
