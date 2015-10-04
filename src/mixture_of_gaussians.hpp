@@ -21,6 +21,7 @@ class MixtureOfGaussians
         int clusters_num;
         bool is_initialized;
         double alpha;
+        double bg_classifier;
 
         void paint_foreground(const uchar ** const input_pixel_ptr,
                               uchar ** const result_pixel_ptr,
@@ -31,7 +32,7 @@ class MixtureOfGaussians
          * @param[in]   k               number of Gaussians for each pixel
          * @param[in]   alpha           learning rate for each Gaussian
         */
-        MixtureOfGaussians(int k, double alpha);
+        MixtureOfGaussians(int k, double alpha, double bg_classifier);
         //~MixtureOfGaussians();
 
         Mat update(const Mat & input_frame);
@@ -50,6 +51,9 @@ class MixtureOfGaussians
          * @param[out]  result_frame    Returned frame is always black
         */
         void initialize_gaussians(const Mat & input_frame, Mat & result_frame);
+
+        void print_parameters(int row = -1, int col = -1, int gaussian_num = -1);
+        void sort();
 };
 
 #endif /* SRC_MIXTURE_OF_GAUSSIANS_HPP_ */

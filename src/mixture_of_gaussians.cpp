@@ -4,12 +4,13 @@
 #include <cstdlib>
 #include <ctime>
 
-MixtureOfGaussians::MixtureOfGaussians(int k, double alpha)
+MixtureOfGaussians::MixtureOfGaussians(int k, double alpha, double bg_classifier)
 {
     this->width = NONE;
     this->height = NONE;
     this->clusters_num = k;
     this->alpha = alpha;
+    this->bg_classifier = bg_classifier;
     is_initialized = false;
     pixels = NULL;
 }
@@ -255,4 +256,47 @@ void MixtureOfGaussians::initialize_gaussians(const Mat & input_frame, Mat & res
         delete [] gaussian_means[i];
     }
     delete [] gaussian_means;
+}
+
+void MixtureOfGaussians::sort()
+{
+    for(int row = 0; row < height; ++row)
+    {
+        for(int col = 0; col < width; ++col)
+        {
+            pixels[row][col].sort(bg_classifier);
+        }
+    }
+}
+
+void MixtureOfGaussians::print_parameters(int row, int col, int gaussian_num)
+{
+    if(row == -1 || col == -1)
+    {
+        for(int row = 0; row < height; ++row)
+        {
+            for(int col = 0; col < width; ++col)
+            {
+                cout<<"["<<row<<"]"<<"["<<col<<"]: ";
+                pixels[row][col].print(gaussian_num);
+                cout<<endl;
+            }
+        }
+    }
+    else
+    {
+        if(row < 0 && row >= height)
+        {
+            cout<<"Row out of bounds: "<<row<<endl;
+            return;
+        }
+        if(col < 0 && col >= width)
+        {
+            cout<<"Col out of bounds: "<<col<<endl;
+            return;
+        }
+        cout<<"["<<row<<"]"<<"["<<col<<"]: ";
+        pixels[row][col].print(gaussian_num);
+        cout<<endl;
+    }
 }

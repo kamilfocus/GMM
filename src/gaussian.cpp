@@ -32,10 +32,15 @@ void Gaussian::get_rgb_mean(double * gaussian_means)
 void Gaussian::print()
 {
     string delimiter = ", ";
-    cout<<"(w, r_mean, g_mean, b_mean, std_dev) = ";
+    //cout<<"(w, r_mean, g_mean, b_mean, std_dev) = ";
     cout<<"("<<weight<<delimiter<<r_mean<<delimiter;
     cout<<g_mean<<delimiter<<b_mean<<delimiter;
-    cout<<standard_deviation<<")"<<endl;
+    cout<<standard_deviation<<")";
+}
+
+double Gaussian::get_sort_parameter() const
+{
+    return (weight/standard_deviation);
 }
 
 bool Gaussian::update()

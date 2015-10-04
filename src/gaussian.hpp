@@ -19,6 +19,7 @@ class Gaussian
         void frame_init(double weight, double *gaussian_mean, double standard_deviation);
         void get_rgb_mean(double * gaussian_means);
         void print();
+        double get_sort_parameter() const;
         bool update();
 };
 
