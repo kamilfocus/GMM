@@ -19,7 +19,7 @@ class Pixel
         void get_rgb_mean(int gaussian_num, double * gaussian_means);
         void sort(double bg_classifier); //Parameter T from article
         void print(int gaussian_num = -1);
-        bool is_foreground(int red, int green, int blue);
+        bool is_foreground(double * rgb);
         Pixel & operator=(const Pixel & pixel);
 };
 

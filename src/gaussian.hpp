@@ -4,12 +4,14 @@
 #include <opencv2/core/core.hpp>
 using namespace cv;
 
+#define THRESHOLD (2.5) //constant threshold for pixel-Gaussian match check
 
 class Gaussian
 {
     private:
         double alpha;
         double weight;
+        double *rgb_mean;
         double r_mean;
         double g_mean;
         double b_mean;
@@ -23,7 +25,9 @@ class Gaussian
         void get_rgb_mean(double * gaussian_means);
         double getWeight() { return weight; }
         void print();
-        bool update();
+        void update_unmatched();
+        void update_matched(double *rgb);
+        bool check_pixel_match(double *rgb);
 
         bool operator<(const Gaussian& gaussian) const;
         Gaussian & operator=(const Gaussian& gaussian);

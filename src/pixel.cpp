@@ -1,5 +1,6 @@
 #include "pixel.hpp"
 #include "gaussian.hpp"
+#include "tools.hpp"
 #include <iostream>
 #include <algorithm>
 
@@ -84,7 +85,34 @@ void Pixel::sort(double bg_classifier)
     }
 }
 
-bool Pixel::is_foreground(int red, int green, int blue)
+bool Pixel::is_foreground(double * rgb)
 {
-    return true;
+    // Check if any gaussian matches current pixel
+    bool match_found = false;
+    int match_index;
+    for(match_index=0; match_index < k; ++match_index)
+    {
+        match_found = gaussian_ptr[match_index].check_pixel_match(rgb);
+        if(match_found == true)
+            break;
+    }
+
+    if(match_found)// Case 1: Match is found
+    {
+        for(int i=0; i < k; i++)
+        {
+            if(i == match_index)
+            {
+                gaussian_ptr[i].update_matched(rgb);
+                continue;
+            }
+            gaussian_ptr[i].update_unmatched();
+        }
+        return true;
+    }
+    else//@TODO Case 2: No match is found
+    {
+
+        return false;
+    }
 }

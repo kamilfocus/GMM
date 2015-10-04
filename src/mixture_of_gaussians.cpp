@@ -77,30 +77,30 @@ Mat MixtureOfGaussians::update(const Mat & input_frame)
         for(int col = 0; col < width; ++col)
         {
             //points to each pixel B,G,R value in turn assuming a CV_8UC3 color image
-            paint_foreground(&input_pixel_ptr, &result_pixel_ptr, row, col);
+            paint_foreground(input_pixel_ptr, result_pixel_ptr, row, col);
         }
     }
     return result;
 }
 
-void MixtureOfGaussians::paint_foreground(const uchar ** const input_pixel_ptr,
-                                          uchar ** const result_pixel_ptr,
+void MixtureOfGaussians::paint_foreground(const uchar * input_pixel_ptr,
+                                          uchar * result_pixel_ptr,
                                           int row, int col)
 {
-    int blue, green, red; //RGB
-    blue = (int) *(*input_pixel_ptr)++;
-    green = (int) *(*input_pixel_ptr)++;
-    red = (int) *(*input_pixel_ptr)++;
+    double rgb[RGB_COMPONENTS_NUM];
+    rgb[2] = (double) *input_pixel_ptr++;
+    rgb[1] = (double) *input_pixel_ptr++;
+    rgb[0] = (double) *input_pixel_ptr++;
 
-    if( pixels[row][col].is_foreground(red, green, blue) )    //Foreground
+    if(pixels[row][col].is_foreground(rgb))    //Foreground
     {
         for(int i = 0; i < RGB_COMPONENTS_NUM; ++i)
-            *(*result_pixel_ptr)++ = WHITE;
+           *result_pixel_ptr++ = WHITE;
     }
     else
     {
         for(int i = 0; i < RGB_COMPONENTS_NUM; ++i)
-            *(*result_pixel_ptr)++ = BLACK;
+            *result_pixel_ptr++ = BLACK;
     }
 }
 

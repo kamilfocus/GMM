@@ -9,7 +9,6 @@ using namespace cv;
 
 const uchar BLACK = (uchar) 0;
 const uchar WHITE = (uchar) 255;
-const int RGB_COMPONENTS_NUM = 3;
 
 const int NONE = 0;
 
@@ -23,8 +22,8 @@ class MixtureOfGaussians
         double alpha;
         double bg_classifier;
 
-        void paint_foreground(const uchar ** const input_pixel_ptr,
-                              uchar ** const result_pixel_ptr,
+        void paint_foreground(const uchar * input_pixel_ptr,
+                              uchar * result_pixel_ptr,
                               int row, int col);
     public:
         /* @brief Constructor for Mixture of Gaussians algorithm
