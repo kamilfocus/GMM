@@ -43,16 +43,18 @@ void print_image(Mat & image)
 int main(int argc, char** argv)
 {
     Mat test_frame = imread("highway/input/in000001.jpg", 1);
-    Mat output_frame = imread("highway/input/in000001.jpg", 1);
-    print_image(test_frame);
-    MixtureOfGaussians MoG(3, 0.1, 0.5);
+    Mat output_frame = test_frame;
+    //print_image(test_frame);
+    MixtureOfGaussians MoG(5, 0.1, 0.3);
     MoG.initialize_gaussians(test_frame, output_frame);
-    MoG.print_parameters(100, 100);
+    //MoG.foreground_detection(test_frame, output_frame);
+    //MoG.print_parameters(100, 100);
     //print_image(output_frame);
 
     //MoG.sort();
     //MoG.print_parameters(100, 100);
-    /*FileNameGenerator input_file_name_generator("highway/input/in", JPG);
+
+    FileNameGenerator input_file_name_generator("highway/input/in", JPG);
     FileNameGenerator ground_truth_file_name_generator("highway/groundtruth/gt", PNG);
 
     initialize_windows();
@@ -70,10 +72,11 @@ int main(int argc, char** argv)
         input_frame = imread(frame_name, 1);
         gt_frame = imread(gt_name, 1);
         cv_mixture_of_gaussians->apply(input_frame, cv_mixture_of_gaussians_frame);
-        update_windows(windows_num, &input_frame, &cv_mixture_of_gaussians_frame, &gt_frame, &input_frame);
+        MoG.foreground_detection(input_frame, output_frame);
+        update_windows(windows_num, &input_frame, &cv_mixture_of_gaussians_frame, &gt_frame, &output_frame);
         if(waitKey(10) != -1)//experimental value ~~~63fps
             break;
-    }*/
+    }
 
     return 0;
 }

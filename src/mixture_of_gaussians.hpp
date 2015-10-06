@@ -53,6 +53,7 @@ class MixtureOfGaussians
 
         void print_parameters(int row = -1, int col = -1, int gaussian_num = -1);
         void sort();
+        void foreground_detection(const Mat & input_frame, Mat & result_frame);
 };
 
 #endif /* SRC_MIXTURE_OF_GAUSSIANS_HPP_ */

@@ -4,6 +4,8 @@
 #include <iostream>
 #include <algorithm>
 
+double Pixel::T = 0;
+
 void Pixel::init(int k, double alpha, uchar **gaussians_means)
 {
     this->k = k;
@@ -99,6 +101,7 @@ bool Pixel::is_foreground(double * rgb)
 
     if(match_found)// Case 1: Match is found
     {
+    //	cout << "case 1 " << match_index << "  ";
         for(int i=0; i < k; i++)
         {
             if(i == match_index)
@@ -108,11 +111,16 @@ bool Pixel::is_foreground(double * rgb)
             }
             gaussian_ptr[i].update_unmatched();
         }
-        std::sort(gaussian_ptr, gaussian_ptr+k);
-        return gaussian_ptr[match_index].isForeground();
+
+        bool retval = gaussian_ptr[match_index].isForeground();
+        //std::sort(gaussian_ptr, gaussian_ptr+k);
+        sort(T);
+
+        return retval;
     }
-    else//@TODO Case 2: No match is found
+    else //Case 2: No match is found
     {
+    //	cout << "case 2   ";
     	/*
     	int new_gaussian_index = 0;
     	double new_weight = 0;

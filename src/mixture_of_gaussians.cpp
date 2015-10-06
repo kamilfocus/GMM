@@ -43,7 +43,7 @@ uchar ** MixtureOfGaussians::generate_inital_means(bool deterministic)
     	srand(time(NULL));
 		for(int i=0; i<clusters_num; i++)
 			for(int j=0; j<RGB_COMPONENTS_NUM; j++)
-				new_gaussian_means[i][j] = rand()%0xff + 1;		// 0 - 255 range
+				new_gaussian_means[i][j] = rand()%0xff + 1;		// 1 - 255 range
 
     }
 
@@ -194,6 +194,7 @@ void MixtureOfGaussians::initialize_gaussians(const Mat & input_frame, Mat & res
             //Paint Black first result frame
             for(int i = 0; i < RGB_COMPONENTS_NUM; ++i)
                 *result_pixel_ptr++ = BLACK;
+
         }
     }
 
@@ -245,6 +246,8 @@ void MixtureOfGaussians::initialize_gaussians(const Mat & input_frame, Mat & res
     Gaussian::get_initial_variance() = initial_variance;
 
     cout << endl;
+
+    Pixel::set_T(bg_classifier);
 
     pixels[0][0].frame_init(weight, gaussian_means, standard_deviation);
     pixels[0][0].sort(bg_classifier);
@@ -315,3 +318,32 @@ void MixtureOfGaussians::print_parameters(int row, int col, int gaussian_num)
         cout<<endl;
     }
 }
+
+void MixtureOfGaussians::foreground_detection(const Mat & input_frame, Mat & result_frame)
+{
+	double rgb[RGB_COMPONENTS_NUM];
+	const uchar * input_pixel_ptr;
+	uchar * result_pixel_ptr;
+	uchar mask;
+	for(int row = 0; row < height; ++row)
+	{
+		input_pixel_ptr = input_frame.ptr(row);
+	    result_pixel_ptr = result_frame.ptr(row);
+	    for(int col = 0; col < width; ++col)
+	    {
+	    	//RGB reverted order
+	        rgb[2] = (double) *input_pixel_ptr++;
+	        rgb[1] = (double) *input_pixel_ptr++;
+	        rgb[0] = (double) *input_pixel_ptr++;
+	        mask = (pixels[row][col].is_foreground(rgb)) ? WHITE : BLACK;
+
+	        //cout << row << "x" << col << ": " << (int)mask << endl;
+
+	        for(int i = 0; i < RGB_COMPONENTS_NUM; ++i)
+	        	*result_pixel_ptr++ = mask;
+	    }
+
+	}
+}
+
+

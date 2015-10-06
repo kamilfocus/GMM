@@ -9,6 +9,8 @@ using namespace std;
 class Pixel
 {
     private:
+		static double T;
+
         int k;
         Gaussian *gaussian_ptr;
         void print_error(int gaussian_num);
@@ -21,6 +23,8 @@ class Pixel
         void print(int gaussian_num = -1);
         bool is_foreground(double * rgb);
         Pixel & operator=(const Pixel & pixel);
+
+        static void set_T(double T) { Pixel::T = T; }
 };
 
 #endif /* SRC_PIXEL_HPP_ */
