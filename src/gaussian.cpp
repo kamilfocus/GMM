@@ -91,7 +91,7 @@ void Gaussian::update_matched(double *rgb)
 bool Gaussian::check_pixel_match(double *rgb) //sqrt((r-r_mean)^2 + (b-b_mean)^2 + (c-c_mean)^2)  / dev
 {
     double dist = malahidan_distance(rgb, rgb_mean, RGB_COMPONENTS_NUM);
-    dist = sqrt(dist);
+    //dist = sqrt(dist);
     dist /= standard_deviation;
     double threshold = THRESHOLD * standard_deviation;
     if(dist < threshold)

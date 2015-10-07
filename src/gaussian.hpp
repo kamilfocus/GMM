@@ -4,7 +4,8 @@
 #include <opencv2/core/core.hpp>
 using namespace cv;
 
-#define THRESHOLD (2.5) //constant threshold for pixel-Gaussian match check
+//#define THRESHOLD (0.1) //constant threshold for pixel-Gaussian match check
+#define THRESHOLD (2.5)
 
 class Gaussian
 {

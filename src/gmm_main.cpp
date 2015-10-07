@@ -45,7 +45,7 @@ int main(int argc, char** argv)
     Mat test_frame = imread("highway/input/in000001.jpg", 1);
     Mat output_frame = test_frame;
     //print_image(test_frame);
-    MixtureOfGaussians MoG(5, 0.1, 0.3);
+    MixtureOfGaussians MoG(3, 0.3, 1);
     MoG.initialize_gaussians(test_frame, output_frame);
     //MoG.foreground_detection(test_frame, output_frame);
     //MoG.print_parameters(100, 100);

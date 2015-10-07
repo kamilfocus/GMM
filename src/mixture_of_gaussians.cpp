@@ -111,7 +111,7 @@ void MixtureOfGaussians::initialize_gaussians(const Mat & input_frame, Mat & res
     cout << height << "x" << width << endl;
 
     uchar ** new_gaussian_means;
-    new_gaussian_means = generate_inital_means(true);
+    new_gaussian_means = generate_inital_means(false);
 
     pixels = new Pixel*[height];
     for(int i=0; i < height; ++i)
@@ -235,10 +235,14 @@ void MixtureOfGaussians::initialize_gaussians(const Mat & input_frame, Mat & res
         standard_deviation[i] /= (double) cluster_elements[i];
         standard_deviation[i] /= (double) RGB_COMPONENTS_NUM;
 
+        //temp
+        //standard_deviation[i] /= 10;
+
         if(i == 0 || initial_variance < standard_deviation[i])
         	initial_variance = standard_deviation[i];
 
         standard_deviation[i] = sqrt(standard_deviation[i]);
+        standard_deviation[i] /= 10;
         cout << "standard deviation " << i << ": " << standard_deviation[i] << " ";
     }
 
