@@ -12,7 +12,7 @@ void Pixel::init(int k, double alpha, uchar **gaussians_means)
     //std::cout<<k<<" "<<alpha<<std::endl;
     gaussian_ptr = new Gaussian[k];
     for(int i = 0; i < k; ++i)
-        gaussian_ptr[i].init(alpha, gaussians_means[i]);
+        gaussian_ptr[i].init(alpha, ( (gaussians_means==NULL)? NULL:gaussians_means[i] ) );
 }
 
 void Pixel::frame_init(double *weight, double **gaussian_means, double *standard_devation){
@@ -139,11 +139,21 @@ bool Pixel::is_foreground(double * rgb)
         */
 
     	double * new_means = rgb;
-    	double new_deviation = max(sqrt(Gaussian::get_initial_variance()), gaussian_ptr[k-1].get_deviation());
+    	//double new_deviation = max(sqrt(Gaussian::get_initial_variance()), gaussian_ptr[k-1].get_deviation());
+    	double new_deviation = get_max_deviation();
     	double new_weight = gaussian_ptr[k-1].get_weight();
 
     	gaussian_ptr[k-1].frame_init(new_weight, new_means, new_deviation);
 
         return true;
     }
+}
+
+double Pixel::get_max_deviation()
+{
+	double max_dev = gaussian_ptr[0].get_deviation();
+	for(int i=0; i<k; ++i)
+		max_dev = (gaussian_ptr[i].get_deviation() > max_dev) ? gaussian_ptr[i].get_deviation() : max_dev;
+
+	return max_dev;
 }

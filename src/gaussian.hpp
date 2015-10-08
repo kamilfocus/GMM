@@ -6,6 +6,7 @@ using namespace cv;
 
 //#define THRESHOLD (0.1) //constant threshold for pixel-Gaussian match check
 #define THRESHOLD (2.5)
+#define INITIAL_DEVIATION	5
 
 class Gaussian
 {

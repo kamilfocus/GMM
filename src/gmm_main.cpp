@@ -45,10 +45,11 @@ int main(int argc, char** argv)
     Mat test_frame = imread("highway/input/in000001.jpg", 1);
     Mat output_frame = test_frame;
     //print_image(test_frame);
-    MixtureOfGaussians MoG(3, 0.3, 1);
-    MoG.initialize_gaussians(test_frame, output_frame);
+    MixtureOfGaussians MoG(3, 0.1, 0.8, 200);
+    MoG.simple_inital(test_frame);
+    //MoG.initialize_gaussians(test_frame, output_frame);
     //MoG.foreground_detection(test_frame, output_frame);
-    //MoG.print_parameters(100, 100);
+    //MoG.print_parameters();
     //print_image(output_frame);
 
     //MoG.sort();
@@ -73,6 +74,9 @@ int main(int argc, char** argv)
         gt_frame = imread(gt_name, 1);
         cv_mixture_of_gaussians->apply(input_frame, cv_mixture_of_gaussians_frame);
         MoG.foreground_detection(input_frame, output_frame);
+        //MoG.update(input_frame, output_frame);
+//        if(frame_id == 99)
+//        	MoG.print_parameters();
         update_windows(windows_num, &input_frame, &cv_mixture_of_gaussians_frame, &gt_frame, &output_frame);
         if(waitKey(10) != -1)//experimental value ~~~63fps
             break;

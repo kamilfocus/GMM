@@ -12,12 +12,18 @@ void Gaussian::init(double alpha, uchar *gaussian_mean)
     //this->g_mean = gaussian_mean[1];
     //this->b_mean = gaussian_mean[2];
     rgb_mean = new double[RGB_COMPONENTS_NUM];
+
+    this->weight = 0.0;
+    this->standard_deviation = 0.0;
+
+    if(gaussian_mean == NULL)
+    	return;
+
     for(int i = 0; i < RGB_COMPONENTS_NUM; ++i)
     {
         rgb_mean[i] = gaussian_mean[i];
     }
-    this->weight = 0.0;
-    this->standard_deviation = 0.0;
+
     //std::cout<<alpha<<std::endl;
 }
 
@@ -91,7 +97,7 @@ void Gaussian::update_matched(double *rgb)
 bool Gaussian::check_pixel_match(double *rgb) //sqrt((r-r_mean)^2 + (b-b_mean)^2 + (c-c_mean)^2)  / dev
 {
     double dist = malahidan_distance(rgb, rgb_mean, RGB_COMPONENTS_NUM);
-    //dist = sqrt(dist);
+    dist = sqrt(dist);
     dist /= standard_deviation;
     double threshold = THRESHOLD * standard_deviation;
     if(dist < threshold)
