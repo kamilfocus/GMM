@@ -1,5 +1,6 @@
 .settings/
 Debug/
+test/*
 .cproject
 .project
 [Tt]humbs.db

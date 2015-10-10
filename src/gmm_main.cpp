@@ -45,7 +45,7 @@ int main(int argc, char** argv)
     Mat test_frame = imread("highway/input/in000001.jpg", 1);
     Mat output_frame = test_frame;
     //print_image(test_frame);
-    MixtureOfGaussians MoG(3, 0.1, 0.8, 200);
+    MixtureOfGaussians MoG(7, 0.1, 0.6, 100);
     MoG.simple_inital(test_frame);
     //MoG.initialize_gaussians(test_frame, output_frame);
     //MoG.foreground_detection(test_frame, output_frame);
@@ -66,6 +66,11 @@ int main(int argc, char** argv)
     Ptr< BackgroundSubtractor> cv_mixture_of_gaussians;
     cv_mixture_of_gaussians = createBackgroundSubtractorMOG2();
 
+    const int observed_x = 100;
+    const int observed_y = 100;
+    const uchar COLOR[3] = {255,0,0}; //Red
+
+    //MoG.print_parameters();
     for(int frame_id = 1; frame_id < frame_num; frame_id++)
     {
         frame_name = input_file_name_generator.get_frame_name(frame_id);
@@ -75,8 +80,13 @@ int main(int argc, char** argv)
         cv_mixture_of_gaussians->apply(input_frame, cv_mixture_of_gaussians_frame);
         MoG.foreground_detection(input_frame, output_frame);
         //MoG.update(input_frame, output_frame);
-//        if(frame_id == 99)
-//        	MoG.print_parameters();
+        //if(frame_id == 1)
+        MoG.print_parameters(observed_x , observed_y );
+        uchar* p = output_frame.ptr(observed_x);
+        for(int i=0; i < 3; ++i)
+        {
+            p[3*observed_y + i] = COLOR[2-i];
+        }
         update_windows(windows_num, &input_frame, &cv_mixture_of_gaussians_frame, &gt_frame, &output_frame);
         if(waitKey(10) != -1)//experimental value ~~~63fps
             break;

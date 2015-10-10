@@ -403,6 +403,7 @@ void MixtureOfGaussians::simple_inital(const Mat & input_frame)
         }
     }
 
+    delete [] new_weight;
 }
 
 void MixtureOfGaussians::foreground_detection(const Mat & input_frame, Mat & result_frame)
