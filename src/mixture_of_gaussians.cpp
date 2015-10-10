@@ -5,11 +5,12 @@
 #include <cstdlib>
 #include <ctime>
 
-MixtureOfGaussians::MixtureOfGaussians(int k, double alpha, double bg_classifier, int learning_frames_num)
+MixtureOfGaussians::MixtureOfGaussians(int k, double alpha, double bg_classifier, int init_std_dev)
 {
     this->width = 0;
     this->height = 0;
     this->k = k;
+    this->init_std_dev = init_std_dev;
     Pixel::set_T(bg_classifier);
     Pixel::set_k(k);
     Gaussian::set_alpha(alpha);
@@ -106,9 +107,8 @@ void MixtureOfGaussians::initialise(const Mat & input_frame)
 	{
 		for(int j=0; j<RGB_COMPONENTS_NUM; j++)
 			new_gaussian_means[i][j] = mean_value + i*step;
-		cout<<new_gaussian_means[i][0]<<endl;
 		new_weight[i] = 1.0/k;
-		new_deviation[i] = INITIAL_DEVIATION;
+		new_deviation[i] = init_std_dev;
 	}
 
     pixels = new Pixel*[height];

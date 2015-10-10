@@ -6,6 +6,8 @@ using namespace std;
 double Gaussian::initial_variance = 0;
 double Gaussian::alpha = 0;
 
+#define THRESHOLD (2.5)
+
 void Gaussian::initialise(double weight, double *gaussian_mean, double standard_deviation)
 {
     rgb_mean = new double[RGB_COMPONENTS_NUM];

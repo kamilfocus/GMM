@@ -16,11 +16,12 @@ class MixtureOfGaussians
         Pixel **pixels;
         int height, width;
         int k;
+        int init_std_dev;
         bool is_initialized;
 
         void initialise(const Mat & input_frame);
     public:
-        MixtureOfGaussians(int k, double alpha, double bg_classifier, int learning_frames_num);
+        MixtureOfGaussians(int k, double alpha, double bg_classifier, int init_std_dev);
         ~MixtureOfGaussians();
 
         void update(const Mat & input_frame, Mat & result_frame);

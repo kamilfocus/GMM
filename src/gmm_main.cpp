@@ -20,15 +20,16 @@ const int windows_num = 4;
 
 #define DEBUG
 
-void print_image(Mat & image)
+void print_image(const Mat & image, int my_row = -1, int my_col = -1)
 {
     int rows = image.rows;
     int cols = image.cols;
     int bgr[3];
-    cout<<"Image size: "<<rows<<" x "<<cols<<endl;
+    if(my_row == -1 && my_col == -1)
+        cout<<"Image size: "<<rows<<" x "<<cols<<endl;
     for(int row = 0; row < rows; ++row)
     {
-        uchar* p = image.ptr(row);
+        const uchar* p = image.ptr(row);
         for(int col = 0; col < cols; ++col)
         {
             //points to each pixel B,G,R value in turn assuming a CV_8UC3 color image
@@ -36,9 +37,14 @@ void print_image(Mat & image)
             {
                 bgr[i] = (int) *p++;
             }
-            cout<<"["<<bgr[2]<<", "<<bgr[1]<<", "<<bgr[0]<<"]\t";
+            if((my_row == -1 && my_col == -1) || (my_row == row && my_col == col))
+            {
+                cout<<"["<<row<<"]["<<col<<"]: ";
+                cout<<"("<<bgr[2]<<", "<<bgr[1]<<", "<<bgr[0]<<")\t";
+            }
         }
-        cout<<endl;
+        if(my_row == -1 && my_col == -1)
+            cout<<endl;
     }
 }
 
@@ -47,7 +53,7 @@ int main(int argc, char** argv)
     Mat test_frame = imread("highway/input/in000001.jpg", 1);
     Mat output_frame = test_frame;
 
-    MixtureOfGaussians MoG(3, 0.1, 0.8, 100);
+    MixtureOfGaussians MoG(5, 0.1, 0.5, 5);//(gaussians_num, learning_rate, T, std_deV)
 
     FileNameGenerator input_file_name_generator("highway/input/in", JPG);
     FileNameGenerator ground_truth_file_name_generator("highway/groundtruth/gt", PNG);
@@ -63,7 +69,7 @@ int main(int argc, char** argv)
 #ifdef DEBUG
     const int observed_x = 120;
     const int observed_y = 180;
-    const uchar COLOR[3] = {255,0,0}; //Red
+    const uchar RED_COLOR[3] = {255,0,0};
 
 #endif
 
@@ -77,11 +83,12 @@ int main(int argc, char** argv)
         MoG.update(input_frame, output_frame);
 
 #ifdef DEBUG
+        print_image(input_frame, observed_x , observed_y );
         MoG.print_parameters(observed_x , observed_y );
         uchar* p = output_frame.ptr(observed_x);
         for(int i=0; i < 3; ++i)
         {
-            p[3*observed_y + i] = COLOR[2-i];
+            p[3*observed_y + i] = RED_COLOR[2-i];
         }
 #endif
 

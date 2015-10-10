@@ -4,9 +4,6 @@
 #include <opencv2/core/core.hpp>
 using namespace cv;
 
-#define THRESHOLD (2.5)
-#define INITIAL_DEVIATION	5
-
 class Gaussian
 {
     private:
