@@ -5,29 +5,14 @@
 #include <algorithm>
 
 double Pixel::T = 0;
+int Pixel::k = 0;
 
-void Pixel::init(int k, double alpha, uchar **gaussians_means)
-{
-    this->k = k;
-    //std::cout<<k<<" "<<alpha<<std::endl;
+void Pixel::initialise(double *weight, double **gaussian_means, double *standard_devation){
     gaussian_ptr = new Gaussian[k];
-    for(int i = 0; i < k; ++i)
-        gaussian_ptr[i].init(alpha, ( (gaussians_means==NULL)? NULL:gaussians_means[i] ) );
-}
-
-void Pixel::frame_init(double *weight, double **gaussian_means, double *standard_devation){
     for(int i=0; i < k; ++i)
     {
-        gaussian_ptr[i].frame_init(weight[i], gaussian_means[i], standard_devation[i]);
+        gaussian_ptr[i].initialise(weight[i], gaussian_means[i], standard_devation[i]);
     }
-}
-
-Pixel & Pixel::operator=(const Pixel & pixel)
-{
-	for(int i=0; i<k; i++)
-		gaussian_ptr[i] = pixel.gaussian_ptr[i];
-
-	return (*this);
 }
 
 void Pixel::print(int gaussian_num)
@@ -72,7 +57,7 @@ void Pixel::print_error(int gaussian_num)
     cout<<"No Gaussian with id: "<<gaussian_num<<endl;
 }
 
-void Pixel::sort(double bg_classifier)
+void Pixel::sort()
 {
     std::sort(gaussian_ptr, (gaussian_ptr + k));
 
@@ -82,7 +67,7 @@ void Pixel::sort(double bg_classifier)
     {
     	sum += gaussian_ptr[i].get_weight();
     	gaussian_ptr[i].set_isForeground(isForeground);
-    	if(sum > bg_classifier)
+    	if(sum > T)
     		isForeground = true;
     }
 }
@@ -101,7 +86,6 @@ bool Pixel::is_foreground(double * rgb)
 
     if(match_found)// Case 1: Match is found
     {
-    //	cout << "case 1 " << match_index << "  ";
         for(int i=0; i < k; i++)
         {
             if(i == match_index)
@@ -113,37 +97,17 @@ bool Pixel::is_foreground(double * rgb)
         }
 
         bool retval = gaussian_ptr[match_index].isForeground();
-        //std::sort(gaussian_ptr, gaussian_ptr+k);
-        sort(T);
+        sort();
 
         return retval;
     }
     else //Case 2: No match is found
     {
-    //	cout << "case 2   ";
-    	/*
-    	int new_gaussian_index = 0;
-    	double new_weight = 0;
-    	for(int i=0; i<k; i++)
-    	{
-    		if(new_weight==0 || new_weight>gaussian_ptr[i].get_weight())
-    		{
-    			new_gaussian_index = i;
-    			new_weight = gaussian_ptr[i].get_weight();
-    		}
-    	}
     	double * new_means = rgb;
-    	double new_deviation = sqrt(Gaussian::get_initial_variance());
-        gaussian_ptr[new_gaussian_index].frame_init(new_weight, new_means, new_deviation);
-        std::sort(gaussian_ptr, gaussian_ptr+k);
-        */
-
-    	double * new_means = rgb;
-    	//double new_deviation = max(sqrt(Gaussian::get_initial_variance()), gaussian_ptr[k-1].get_deviation());
     	double new_deviation = get_max_deviation();
     	double new_weight = gaussian_ptr[k-1].get_weight();
 
-    	gaussian_ptr[k-1].frame_init(new_weight, new_means, new_deviation);
+    	gaussian_ptr[k-1].initialise(new_weight, new_means, new_deviation);
 
         return true;
     }

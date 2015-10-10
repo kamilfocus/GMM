@@ -4,31 +4,11 @@
 using namespace std;
 
 double Gaussian::initial_variance = 0;
+double Gaussian::alpha = 0;
 
-void Gaussian::init(double alpha, uchar *gaussian_mean)
+void Gaussian::initialise(double weight, double *gaussian_mean, double standard_deviation)
 {
-    this->alpha = alpha;
-    //this->r_mean = gaussian_mean[0];
-    //this->g_mean = gaussian_mean[1];
-    //this->b_mean = gaussian_mean[2];
     rgb_mean = new double[RGB_COMPONENTS_NUM];
-
-    this->weight = 0.0;
-    this->standard_deviation = 0.0;
-
-    if(gaussian_mean == NULL)
-    	return;
-
-    for(int i = 0; i < RGB_COMPONENTS_NUM; ++i)
-    {
-        rgb_mean[i] = gaussian_mean[i];
-    }
-
-    //std::cout<<alpha<<std::endl;
-}
-
-void Gaussian::frame_init(double weight, double *gaussian_mean, double standard_deviation)
-{
     this->weight = weight;
     for(int i = 0; i < RGB_COMPONENTS_NUM; ++i)
     {
@@ -43,15 +23,11 @@ void Gaussian::get_rgb_mean(double * gaussian_means)
     {
         gaussian_means[i]= rgb_mean[i];
     }
-    //gaussian_means[0] = r_mean;
-    //gaussian_means[1] = g_mean;
-    //gaussian_means[2] = b_mean;
 }
 
 void Gaussian::print()
 {
     string delimiter = ", ";
-    //cout<<"(w, r_mean, g_mean, b_mean, std_dev) = ";
     cout<<"("<<weight<<delimiter<<rgb_mean[0]<<delimiter;
     cout<<rgb_mean[1]<<delimiter<<rgb_mean[2]<<delimiter;
     cout<<standard_deviation<<")";
@@ -106,19 +82,3 @@ bool Gaussian::check_pixel_match(double *rgb) //sqrt((r-r_mean)^2 + (b-b_mean)^2
         return false;
 }
 
-Gaussian & Gaussian::operator=(const Gaussian & gaussian)
-{
-    weight = gaussian.weight;
-
-    for(int i = 0; i < RGB_COMPONENTS_NUM; ++i)
-    {
-        rgb_mean[i] = gaussian.rgb_mean[i];
-    }
-    //r_mean = gaussian.r_mean;
-    //g_mean = gaussian.g_mean;
-    //b_mean = gaussian.b_mean;
-    standard_deviation = gaussian.standard_deviation; //same for all RGB values, sigma without square
-    foreground = gaussian.foreground;
-
-	return (*this);
-}

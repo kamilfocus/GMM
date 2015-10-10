@@ -9,27 +9,23 @@ using namespace std;
 class Pixel
 {
     private:
-		static double T;
+        static double T;
+        static int k;
 
-        int k;
         Gaussian *gaussian_ptr;
 
         void print_error(int gaussian_num);
-    public:
-        void init(int k, double alpha, uchar **gaussian_means = NULL);
-        void frame_init(double *weight, double **gaussian_means, double *standard_devation);
-        void frame_init(Gaussian* gaussian_ptr);
-        void get_rgb_mean(int gaussian_num, double * gaussian_means);
-        void sort(double bg_classifier); //Parameter T from article
-        void print(int gaussian_num = -1);
-        bool is_foreground(double * rgb);
-        Pixel & operator=(const Pixel & pixel);
+        void sort(); //Parameter T from article, background classifier
         double get_max_deviation();
 
-        void pixel_init(double * rgb, int frame_num);
-
+    public:
         static void set_T(double T) { Pixel::T = T; }
+        static void set_k(double k) { Pixel::k = k; }
 
+        void initialise(double *weight, double **gaussian_means, double *standard_devation);
+        void get_rgb_mean(int gaussian_num, double * gaussian_means);
+        void print(int gaussian_num = -1);
+        bool is_foreground(double * rgb);
 };
 
 #endif /* SRC_PIXEL_HPP_ */

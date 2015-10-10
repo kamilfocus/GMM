@@ -18,6 +18,8 @@ using namespace std;
 const int frame_num = 1700;
 const int windows_num = 4;
 
+#define DEBUG
+
 void print_image(Mat & image)
 {
     int rows = image.rows;
@@ -44,16 +46,8 @@ int main(int argc, char** argv)
 {
     Mat test_frame = imread("highway/input/in000001.jpg", 1);
     Mat output_frame = test_frame;
-    //print_image(test_frame);
-    MixtureOfGaussians MoG(7, 0.1, 0.6, 100);
-    MoG.simple_inital(test_frame);
-    //MoG.initialize_gaussians(test_frame, output_frame);
-    //MoG.foreground_detection(test_frame, output_frame);
-    //MoG.print_parameters();
-    //print_image(output_frame);
 
-    //MoG.sort();
-    //MoG.print_parameters(100, 100);
+    MixtureOfGaussians MoG(3, 0.1, 0.8, 100);
 
     FileNameGenerator input_file_name_generator("highway/input/in", JPG);
     FileNameGenerator ground_truth_file_name_generator("highway/groundtruth/gt", PNG);
@@ -66,11 +60,13 @@ int main(int argc, char** argv)
     Ptr< BackgroundSubtractor> cv_mixture_of_gaussians;
     cv_mixture_of_gaussians = createBackgroundSubtractorMOG2();
 
-    const int observed_x = 100;
-    const int observed_y = 100;
+#ifdef DEBUG
+    const int observed_x = 120;
+    const int observed_y = 180;
     const uchar COLOR[3] = {255,0,0}; //Red
 
-    //MoG.print_parameters();
+#endif
+
     for(int frame_id = 1; frame_id < frame_num; frame_id++)
     {
         frame_name = input_file_name_generator.get_frame_name(frame_id);
@@ -78,15 +74,17 @@ int main(int argc, char** argv)
         input_frame = imread(frame_name, 1);
         gt_frame = imread(gt_name, 1);
         cv_mixture_of_gaussians->apply(input_frame, cv_mixture_of_gaussians_frame);
-        MoG.foreground_detection(input_frame, output_frame);
-        //MoG.update(input_frame, output_frame);
-        //if(frame_id == 1)
+        MoG.update(input_frame, output_frame);
+
+#ifdef DEBUG
         MoG.print_parameters(observed_x , observed_y );
         uchar* p = output_frame.ptr(observed_x);
         for(int i=0; i < 3; ++i)
         {
             p[3*observed_y + i] = COLOR[2-i];
         }
+#endif
+
         update_windows(windows_num, &input_frame, &cv_mixture_of_gaussians_frame, &gt_frame, &output_frame);
         if(waitKey(10) != -1)//experimental value ~~~63fps
             break;
