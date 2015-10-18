@@ -15,10 +15,55 @@
 using namespace cv;
 using namespace std;
 
-const int frame_num = 1700;
 const int windows_num = 4;
 
 #define DEBUG
+#define TEST_GROUP      0
+
+#if TEST_GROUP == 0
+
+const int frame_num = 1700;
+const string input_frame_prefix = "highway/input/in";
+const string gt_frame_prefix = "highway/groundtruth/gt";
+
+#elif TEST_GROUP ==  1
+
+const int frame_num = 2050;
+const string input_frame_prefix = "test/office/input/in";
+const string gt_frame_prefix = "test/office/groundtruth/gt";
+
+#elif TEST_GROUP ==  2
+
+const int frame_num = 1099;
+const string input_frame_prefix = "test/pedestrians/input/in";
+const string gt_frame_prefix = "test/pedestrians/groundtruth/gt";
+
+#elif TEST_GROUP ==  3
+
+const int frame_num = 1200;
+const string input_frame_prefix = "test/PETS2006/input/in";
+const string gt_frame_prefix = "test/PETS2006/groundtruth/gt";
+
+#elif TEST_GROUP ==  4
+
+const int frame_num = 1189;
+const string input_frame_prefix = "test/canoe/input/in";
+const string gt_frame_prefix = "test/canoe/groundtruth/gt";
+
+#elif TEST_GROUP ==  5
+
+const int frame_num = 4000;
+const string input_frame_prefix = "test/fall/input/in";
+const string gt_frame_prefix = "test/fall/groundtruth/gt";
+
+#elif TEST_GROUP ==  6
+
+const int frame_num = 1184;
+const string input_frame_prefix = "test/fountain01/input/in";
+const string gt_frame_prefix = "test/fountain01/groundtruth/gt";
+
+
+#endif
 
 void print_image(const Mat & image, int my_row = -1, int my_col = -1)
 {
@@ -50,17 +95,14 @@ void print_image(const Mat & image, int my_row = -1, int my_col = -1)
 
 int main(int argc, char** argv)
 {
-    Mat test_frame = imread("highway/input/in000001.jpg", 1);
-    Mat output_frame = test_frame;
+    MixtureOfGaussians MoG(5, 0.1, 0.5 , 5);//(gaussians_num, learning_rate, T, std_deV)
 
-    MixtureOfGaussians MoG(5, 0.1, 0.5, 5);//(gaussians_num, learning_rate, T, std_deV)
-
-    FileNameGenerator input_file_name_generator("highway/input/in", JPG);
-    FileNameGenerator ground_truth_file_name_generator("highway/groundtruth/gt", PNG);
+    FileNameGenerator input_file_name_generator(input_frame_prefix, JPG);
+    FileNameGenerator ground_truth_file_name_generator(gt_frame_prefix, PNG);
 
     initialize_windows();
 
-    Mat input_frame, gt_frame, cv_mixture_of_gaussians_frame;
+    Mat input_frame, gt_frame, cv_mixture_of_gaussians_frame, output_frame;
     string frame_name, gt_name;
 
     Ptr< BackgroundSubtractor> cv_mixture_of_gaussians;
@@ -70,7 +112,6 @@ int main(int argc, char** argv)
     const int observed_x = 120;
     const int observed_y = 180;
     const uchar RED_COLOR[3] = {255,0,0};
-
 #endif
 
     for(int frame_id = 1; frame_id < frame_num; frame_id++)

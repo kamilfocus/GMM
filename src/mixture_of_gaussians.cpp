@@ -32,6 +32,7 @@ void MixtureOfGaussians::update(const Mat & input_frame, Mat & result_frame)
     if(!is_initialized)
     {
         initialise(input_frame);
+        result_frame = input_frame;
         is_initialized = true;
     }
 

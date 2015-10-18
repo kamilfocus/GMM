@@ -62,14 +62,14 @@ void Gaussian::update_matched(double *rgb)
     {
         rgb_mean[i] *= (1 - ro);
         rgb_mean[i] += ro*rgb[i];
-    }
+    }/**/
 
     //Standard deviation
     double dist = malahidan_distance(rgb, rgb_mean, RGB_COMPONENTS_NUM);
     standard_deviation *= standard_deviation;
     standard_deviation *= (1 - ro);
     standard_deviation += ro*dist;
-    standard_deviation = sqrt(standard_deviation);
+    standard_deviation = sqrt(standard_deviation);/**/
 }
 
 bool Gaussian::check_pixel_match(double *rgb) //sqrt((r-r_mean)^2 + (b-b_mean)^2 + (c-c_mean)^2)  / dev
