@@ -134,7 +134,7 @@ int main(int argc, char** argv)
 #endif
 
         update_windows(windows_num, &input_frame, &cv_mixture_of_gaussians_frame, &gt_frame, &output_frame);
-        if(waitKey(10) != -1)//experimental value ~~~63fps
+        if(waitKey(10) != -1)//experimental value ~63fps
             break;
     }
 
