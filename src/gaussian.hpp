@@ -13,6 +13,7 @@ class Gaussian
 		double weight;
         double *rgb_mean;
         double standard_deviation; //same for all RGB values, sigma without square
+        int matchsum;
         bool foreground;
         double get_sort_parameter() const;
 
@@ -20,6 +21,7 @@ class Gaussian
         void initialise(double weight, double *gaussian_mean, double standard_deviation);
         void get_rgb_mean(double * gaussian_means);
         double get_weight() { return weight; }
+        int get_matchsum() {return matchsum; }
         void print();
         void update_unmatched();
         void update_matched(double *rgb);

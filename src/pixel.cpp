@@ -13,10 +13,12 @@ void Pixel::initialise(double *weight, double **gaussian_means, double *standard
     {
         gaussian_ptr[i].initialise(weight[i], gaussian_means[i], standard_devation[i]);
     }
+    matchsum_total = k;
 }
 
 void Pixel::print(int gaussian_num)
 {
+    cout<<"{"<<matchsum_total<<"}:";
     if(gaussian_num == -1)
     {
         for(int gauss_num = 0; gauss_num < k; ++gauss_num)
@@ -91,6 +93,7 @@ bool Pixel::is_foreground(double * rgb)
             if(i == match_index)
             {
                 gaussian_ptr[i].update_matched(rgb);
+                matchsum_total++;
                 continue;
             }
             gaussian_ptr[i].update_unmatched();
@@ -105,7 +108,10 @@ bool Pixel::is_foreground(double * rgb)
     {
     	double * new_means = rgb;
     	double new_deviation = get_max_deviation();
-    	double new_weight = gaussian_ptr[k-1].get_weight();
+    	matchsum_total -= gaussian_ptr[k-1].get_matchsum();
+    	matchsum_total++;
+        double new_weight = 1.0; //gaussian_ptr[k-1].get_weight();
+        new_weight /= (double) matchsum_total;
 
     	gaussian_ptr[k-1].initialise(new_weight, new_means, new_deviation);
 

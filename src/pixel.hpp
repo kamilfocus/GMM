@@ -13,6 +13,7 @@ class Pixel
         static int k;
 
         Gaussian *gaussian_ptr;
+        int matchsum_total;
 
         void print_error(int gaussian_num);
         void sort(); //Parameter T from article, background classifier

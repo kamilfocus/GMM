@@ -65,6 +65,36 @@ const string gt_frame_prefix = "test/fountain01/groundtruth/gt";
 
 #endif
 
+void convert2grayscale(const Mat & input, Mat & output)
+{
+    output = input.clone();
+
+    double rgb[3];
+    const uchar * input_pixel_ptr;
+    uchar * result_pixel_ptr;
+    uchar gray_value;
+
+    int height = input.rows;
+    int width = input.cols;
+    for(int row = 0; row < height; ++row)
+    {
+        input_pixel_ptr = input.ptr(row);
+        result_pixel_ptr = output.ptr(row);
+        for(int col = 0; col < width; ++col)
+        {
+            //RGB reverted order
+            rgb[2] = (double) *input_pixel_ptr++;
+            rgb[1] = (double) *input_pixel_ptr++;
+            rgb[0] = (double) *input_pixel_ptr++;
+            //gray_value = (rgb[0]+rgb[1]+rgb[2])/3;
+            gray_value = 0.2126*rgb[0]+0.7152*rgb[1]+0.0722*rgb[2];
+
+            for(int i = 0; i < 3; ++i)
+                *result_pixel_ptr++ = gray_value;
+        }
+    }
+}
+
 void print_image(const Mat & image, int my_row = -1, int my_col = -1)
 {
     int rows = image.rows;
@@ -95,14 +125,14 @@ void print_image(const Mat & image, int my_row = -1, int my_col = -1)
 
 int main(int argc, char** argv)
 {
-    MixtureOfGaussians MoG(5, 0.1, 0.5 , 5);//(gaussians_num, learning_rate, T, std_deV)
+    MixtureOfGaussians MoG(5, 0.01, 0.5 , 3);//(gaussians_num, learning_rate, T, std_deV)
 
     FileNameGenerator input_file_name_generator(input_frame_prefix, JPG);
     FileNameGenerator ground_truth_file_name_generator(gt_frame_prefix, PNG);
 
     initialize_windows();
 
-    Mat input_frame, gt_frame, cv_mixture_of_gaussians_frame, output_frame;
+    Mat input_frame, gray_input_frame, gt_frame, cv_mixture_of_gaussians_frame, output_frame;
     string frame_name, gt_name;
 
     Ptr< BackgroundSubtractor> cv_mixture_of_gaussians;
@@ -119,12 +149,13 @@ int main(int argc, char** argv)
         frame_name = input_file_name_generator.get_frame_name(frame_id);
         gt_name = ground_truth_file_name_generator.get_frame_name(frame_id);
         input_frame = imread(frame_name, 1);
+        convert2grayscale(input_frame, gray_input_frame);
         gt_frame = imread(gt_name, 1);
         cv_mixture_of_gaussians->apply(input_frame, cv_mixture_of_gaussians_frame);
-        MoG.update(input_frame, output_frame);
+        MoG.update(gray_input_frame, output_frame);
 
 #ifdef DEBUG
-        print_image(input_frame, observed_x , observed_y );
+        print_image(gray_input_frame, observed_x , observed_y );
         MoG.print_parameters(observed_x , observed_y );
         uchar* p = output_frame.ptr(observed_x);
         for(int i=0; i < 3; ++i)
@@ -133,7 +164,7 @@ int main(int argc, char** argv)
         }
 #endif
 
-        update_windows(windows_num, &input_frame, &cv_mixture_of_gaussians_frame, &gt_frame, &output_frame);
+        update_windows(windows_num, &input_frame, &cv_mixture_of_gaussians_frame, &gray_input_frame, &output_frame);
         if(waitKey(10) != -1)//experimental value ~63fps
             break;
     }

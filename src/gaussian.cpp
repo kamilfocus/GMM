@@ -11,6 +11,7 @@ double Gaussian::alpha = 0;
 void Gaussian::initialise(double weight, double *gaussian_mean, double standard_deviation)
 {
     rgb_mean = new double[RGB_COMPONENTS_NUM];
+    matchsum = 1;
     this->weight = weight;
     for(int i = 0; i < RGB_COMPONENTS_NUM; ++i)
     {
@@ -32,7 +33,7 @@ void Gaussian::print()
     string delimiter = ", ";
     cout<<"("<<weight<<delimiter<<rgb_mean[0]<<delimiter;
     cout<<rgb_mean[1]<<delimiter<<rgb_mean[2]<<delimiter;
-    cout<<standard_deviation<<")";
+    cout<<standard_deviation<<delimiter<<matchsum<<")";
 }
 
 bool Gaussian :: operator<(const Gaussian& gaussian) const
@@ -52,31 +53,43 @@ void Gaussian::update_unmatched()
 
 void Gaussian::update_matched(double *rgb)
 {
+    //RGB means
+    double alpha_w = alpha/weight;
+    double dist_sq = rgb[0]-rgb_mean[0];
+    dist_sq*= dist_sq;
+    for(int i = 0; i < RGB_COMPONENTS_NUM; ++i)
+    {
+        rgb_mean[i] += alpha_w*(rgb[i] - rgb_mean[i]);
+        if(rgb_mean[i] < 0)
+            rgb_mean[i] = 0;
+        if(rgb_mean[i] > 255)
+            rgb_mean[i] = 255;
+    }
+
+    //Standard deviation
+    standard_deviation *= standard_deviation;
+    standard_deviation += alpha_w*(dist_sq - standard_deviation);
+    if(standard_deviation <= 0)
+    {
+        standard_deviation = 1;
+        //string del = " ";
+        //cout<<"Error: "<<rgb[0]<<del<<rgb_mean[0]<<del<<dist_sq<<del<<standard_deviation<<endl;
+        //exit(-1);
+    }
+    standard_deviation = sqrt(standard_deviation);
+
     //Weight
     weight *=  (1 - alpha);
     weight += alpha;
 
-    //RGB means
-    double ro = alpha*count_probability_density(rgb, rgb_mean, standard_deviation);
-    for(int i = 0; i < RGB_COMPONENTS_NUM; ++i)
-    {
-        rgb_mean[i] *= (1 - ro);
-        rgb_mean[i] += ro*rgb[i];
-    }/**/
-
-    //Standard deviation
-    double dist = malahidan_distance(rgb, rgb_mean, RGB_COMPONENTS_NUM);
-    standard_deviation *= standard_deviation;
-    standard_deviation *= (1 - ro);
-    standard_deviation += ro*dist;
-    standard_deviation = sqrt(standard_deviation);/**/
+    //Matchsum
+    matchsum++;
 }
 
 bool Gaussian::check_pixel_match(double *rgb) //sqrt((r-r_mean)^2 + (b-b_mean)^2 + (c-c_mean)^2)  / dev
 {
-    double dist = malahidan_distance(rgb, rgb_mean, RGB_COMPONENTS_NUM);
-    dist = sqrt(dist);
-    dist /= standard_deviation;
+    double diff = rgb[0]-rgb_mean[0];
+    double dist = (diff > 0) ? diff : -diff;
     double threshold = THRESHOLD * standard_deviation;
     if(dist < threshold)
         return true;
